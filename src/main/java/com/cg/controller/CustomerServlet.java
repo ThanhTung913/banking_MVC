@@ -1,10 +1,7 @@
 package com.cg.controller;
 
 import com.cg.model.Customer;
-import com.cg.service.DepositService;
-import com.cg.service.ICustomerService;
-import com.cg.service.CustomerServicelmpl;
-import com.cg.service.IDepositSerVice;
+import com.cg.service.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -25,9 +22,8 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-//        resp.setContentType("text/html;charset=UTF-8");
-//        req.setCharacterEncoding("utf-8");
+        resp.setContentType("text/html;charset=UTF-8");
+        req.setCharacterEncoding("utf-8");
         String action = req.getParameter("action");
         if (action == null) {
             action = "";
@@ -71,14 +67,14 @@ public class CustomerServlet extends HttpServlet {
 
     private void showDeleteForm(HttpServletRequest req, HttpServletResponse resp) {
         int id = Integer.parseInt(req.getParameter("id"));
-        Customer customer  = customerService.findById(id);
+        Customer customer = customerService.findById(id);
         RequestDispatcher dispatcher = req.getRequestDispatcher("/customer/withdraw.jsp");
         req.setAttribute("nameCustomer", customer.getName());
         req.setAttribute("emailCustomer", customer.getEmail());
-        req.setAttribute("addressCustomer",customer.getAddress());
-        req.setAttribute("phoneCustomer",customer.getPhone());
-        req.setAttribute("balanceCustomer",customer.getBalance());
-        req.setAttribute("id",id);
+        req.setAttribute("addressCustomer", customer.getAddress());
+        req.setAttribute("phoneCustomer", customer.getPhone());
+        req.setAttribute("balanceCustomer", customer.getBalance());
+        req.setAttribute("id", id);
         req.setAttribute("customer", customer);
         System.out.println(customer.getName());
         try {
@@ -99,14 +95,14 @@ public class CustomerServlet extends HttpServlet {
 
     private void showWithdrawForm(HttpServletRequest req, HttpServletResponse resp) {
         int id = Integer.parseInt(req.getParameter("id"));
-        Customer customer  = customerService.findById(id);
+        Customer customer = customerService.findById(id);
         RequestDispatcher dispatcher = req.getRequestDispatcher("/customer/withdraw.jsp");
-        req.setAttribute("nameCustomer", customer.getName());
-        req.setAttribute("emailCustomer", customer.getEmail());
-        req.setAttribute("addressCustomer",customer.getAddress());
-        req.setAttribute("phoneCustomer",customer.getPhone());
-        req.setAttribute("balanceCustomer",customer.getBalance());
-        req.setAttribute("id",id);
+//        req.setAttribute("nameCustomer", customer.getName());
+//        req.setAttribute("emailCustomer", customer.getEmail());
+//        req.setAttribute("addressCustomer", customer.getAddress());
+//        req.setAttribute("phoneCustomer", customer.getPhone());
+//        req.setAttribute("balanceCustomer", customer.getBalance());
+//        req.setAttribute("id", id);
         req.setAttribute("customer", customer);
         System.out.println(customer.getName());
         try {
@@ -120,7 +116,7 @@ public class CustomerServlet extends HttpServlet {
         int id = Integer.parseInt(req.getParameter("id"));
         Customer customer = customerService.findById(id);
         RequestDispatcher dispatcher = req.getRequestDispatcher("/customer/deposit.jsp");
-        req.setAttribute("customer",customer);
+        req.setAttribute("customer", customer);
         dispatcher.forward(req, resp);
     }
 
@@ -132,9 +128,9 @@ public class CustomerServlet extends HttpServlet {
         Customer customer = customerService.findById(id);
         req.setAttribute("nameCustomer", customer.getName());
         req.setAttribute("emailCustomer", customer.getEmail());
-        req.setAttribute("addressCustomer",customer.getAddress());
-        req.setAttribute("phoneCustomer",customer.getPhone());
-        req.setAttribute("id",id);
+        req.setAttribute("addressCustomer", customer.getAddress());
+        req.setAttribute("phoneCustomer", customer.getPhone());
+        req.setAttribute("id", id);
         System.out.println(customer.getName());
         try {
             dispatcher.forward(req, resp);
@@ -162,14 +158,14 @@ public class CustomerServlet extends HttpServlet {
             case "deposit":
                 doDeposit(req, resp);
                 break;
-            case "findById":
-                findById(req, resp);
+            case "withdraw":
+                doWithdraw(req, resp);
                 break;
             case "createCustomer":
 
                 break;
-            case "edit" :
-                editCustomer(req,resp);
+            case "edit":
+                editCustomer(req, resp);
                 break;
             default:
                 break;
@@ -177,7 +173,8 @@ public class CustomerServlet extends HttpServlet {
 
     }
 
-    private void editCustomer(HttpServletRequest request,HttpServletResponse response) {
+
+    private void editCustomer(HttpServletRequest request, HttpServletResponse response) {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/customers/edit.jsp");
         int id = Integer.parseInt(request.getParameter("id"));
         Customer customer = customerService.findById(id);
@@ -192,12 +189,12 @@ public class CustomerServlet extends HttpServlet {
         }
         request.setAttribute("nameCustomer", customer.getName());
         request.setAttribute("emailCustomer", customer.getEmail());
-        request.setAttribute("addressCustomer",customer.getAddress());
-        request.setAttribute("phoneCustomer",customer.getPhone());
-        request.setAttribute("id",id);
-        request.setAttribute("message","Update successful !!!");
+        request.setAttribute("addressCustomer", customer.getAddress());
+        request.setAttribute("phoneCustomer", customer.getPhone());
+        request.setAttribute("id", id);
+        request.setAttribute("message", "Update successful !!!");
         try {
-            dispatcher.forward(request,response);
+            dispatcher.forward(request, response);
         } catch (ServletException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -212,21 +209,32 @@ public class CustomerServlet extends HttpServlet {
 
     }
 
-    private void doDeposit(HttpServletRequest request, HttpServletResponse response) {
+    private void doWithdraw(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Customer customer = customerService.findById(id);
+        BigDecimal transactionAmount = new BigDecimal(request.getParameter("transactionAmount"));
+        IWithDrawService withDrawService = new WithDrawService();
+        String messager = request.getParameter("messager");
+        withDrawService.withdraw(id, transactionAmount, messager);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("customer/withdraw.jsp");
+        request.setAttribute("customer", customer);
+        dispatcher.forward(request, response);
+    }
 
-    int id = Integer.parseInt(request.getParameter("id"));
-    Customer customer = customerService.findById(id);
+    private void doDeposit(HttpServletRequest request, HttpServletResponse response) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Customer customer = customerService.findById(id);
         BigDecimal transactionAmount = new BigDecimal(request.getParameter("transactionAmount"));
         IDepositSerVice depositSerVice = new DepositService();
-        depositSerVice.create(id, transactionAmount);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("customer/deposit.jsp");
-        request.setAttribute("customerExist", customer);
+        depositSerVice.deposit(id, transactionAmount);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("customer/deposit.jsp");
+        request.setAttribute("customer", customer);
 
-            try {
-                dispatcher.forward(request, response);
-            } catch (ServletException | IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

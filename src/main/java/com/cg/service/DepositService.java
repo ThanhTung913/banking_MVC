@@ -62,7 +62,7 @@ public class DepositService implements IDepositSerVice{
 
 
     @Override
-    public boolean create(int id, BigDecimal amount) {
+    public boolean deposit(int id, BigDecimal amount) {
         try {
             Connection connection = getConnection();
             CallableStatement callableStatement = connection.prepareCall(CREATE_DEPOSIT_SQL);

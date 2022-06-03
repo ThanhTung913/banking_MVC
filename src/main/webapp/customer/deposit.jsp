@@ -78,16 +78,16 @@
 </fieldset>
 </form>
 </div>
-<%--<div class="footer">--%>
-<%--  <div id="message-alert">--%>
+<div class="footer">
+  <div id="message-alert">
 
 
-<%--    <div class="alert-danger hide">--%>
-<%--      <h5>Please correct errors below:</h5>--%>
-<%--    </div>--%>
+    <div class="alert-danger hide">
+      <h5>Please correct errors below:</h5>
+    </div>
 
-<%--  </div>--%>
-<%--</div>--%>
+  </div>
+</div>
 <%@include file="/layout/script.jsp"%>
 </body>
 </html>

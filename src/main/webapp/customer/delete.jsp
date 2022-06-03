@@ -57,11 +57,11 @@
         </fieldset>
     </form>
 </div>
-<%--<div class="footer">--%>
-<%--    <div id="message-alert">--%>
+<div class="footer">
+    <div id="message-alert">
 
-<%--    </div>--%>
-<%--</div>--%>
+    </div>
+</div>
 
 <%@include file="/layout/script.jsp"%>
 
