@@ -30,8 +30,14 @@ public class Customer {
         this.phone = phone;
         this.address = address;
     }
+    public Customer( String name, String email, String phone, String address) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+    }
 
-    public Customer(int id, String name, String email, String phone, BigDecimal balance, String address) {
+    public Customer(int id, String name, String email, String phone, String address, BigDecimal balance) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -126,5 +132,22 @@ public class Customer {
 
     public void setUpdatedBy(int updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", balance=" + balance +
+                ", address='" + address + '\'' +
+                ", deleted=" + deleted +
+                ", createAt=" + createAt +
+                ", createdBy=" + createdBy +
+                ", updateAt=" + updateAt +
+                ", updatedBy=" + updatedBy +
+                '}';
     }
 }

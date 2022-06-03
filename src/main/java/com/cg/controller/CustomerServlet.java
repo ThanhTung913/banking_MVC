@@ -16,7 +16,11 @@ import java.util.List;
 
 @WebServlet(name = "CustomerServlet", urlPatterns = "/customers")
 public class CustomerServlet extends HttpServlet {
+    private CustomerServicelmpl customerServicelmpl;
 
+    public void init() {
+        customerServicelmpl = new CustomerServicelmpl();
+    }
 
     private final ICustomerService customerService = new CustomerServicelmpl();
 
@@ -115,33 +119,25 @@ public class CustomerServlet extends HttpServlet {
     private void showDepositForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
         Customer customer = customerService.findById(id);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/customer/deposit.jsp");
         req.setAttribute("customer", customer);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/customer/deposit.jsp");
         dispatcher.forward(req, resp);
     }
 
-
-    private void showEditForm(HttpServletRequest req, HttpServletResponse resp) {
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/customer/edit.jsp");
+    private void showEditForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
-        System.out.println(id);
+
         Customer customer = customerService.findById(id);
-        req.setAttribute("nameCustomer", customer.getName());
-        req.setAttribute("emailCustomer", customer.getEmail());
-        req.setAttribute("addressCustomer", customer.getAddress());
-        req.setAttribute("phoneCustomer", customer.getPhone());
-        req.setAttribute("id", id);
+        req.setAttribute("customer", customer);
         System.out.println(customer.getName());
-        try {
-            dispatcher.forward(req, resp);
-        } catch (ServletException | IOException e) {
-            e.printStackTrace();
-        }
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/customer/edit.jsp");
+        dispatcher.forward(req, resp);
+
     }
 
-    private void showCreateForm(HttpServletRequest request, HttpServletResponse response) {
-
-
+    private void showCreateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("customer/createCustomer.jsp");
+        dispatcher.forward(request, response);
     }
 
     private void showCreateForm(Customer newCustomer) {
@@ -161,14 +157,32 @@ public class CustomerServlet extends HttpServlet {
             case "withdraw":
                 doWithdraw(req, resp);
                 break;
-            case "createCustomer":
-
+            case "create":
+                createCustomer(req, resp);
                 break;
             case "edit":
                 editCustomer(req, resp);
                 break;
             default:
                 break;
+        }
+
+    }
+
+    private void createCustomer(HttpServletRequest req, HttpServletResponse resp){
+        try{
+            String name = req.getParameter("full_name");
+            String email = req.getParameter("email");
+            String phone = req.getParameter("phone");
+            String address = req.getParameter("address");
+            Customer newCustomer = new Customer(name, email, phone, address);
+
+            System.out.println(newCustomer);
+            customerService.create(newCustomer);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("customer/createCustomer.jsp");
+            dispatcher.forward(req, resp);
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
 
     }
@@ -240,7 +254,7 @@ public class CustomerServlet extends HttpServlet {
 
 
     private void showCustomers(HttpServletResponse resp, HttpServletRequest req) {
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/customer/list.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("customer/list.jsp");
 
         List<Customer> customers = customerService.findAll();
 

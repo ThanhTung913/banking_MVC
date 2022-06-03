@@ -11,7 +11,7 @@ import static com.cg.ultis.MySQLConnUtil.getConnection;
 
 public class CustomerServicelmpl implements ICustomerService {
     Customer customer = new Customer();
-    private final String SELECT_ALL_CUSTOMER = "" +
+    private static final String SELECT_ALL_CUSTOMER = "" +
             "SELECT " +
             " c.id, " +
             " c.full_name, " +
@@ -22,37 +22,32 @@ public class CustomerServicelmpl implements ICustomerService {
             "FROM customers AS c " +
             "WHERE c.deleted = 0;";
 
-    private final String DELETE_CUSTOMER_SQL = "" +
+    private static final String DELETE_CUSTOMER_SQL = "" +
             "DELETE " +
             "FROM customers " +
             "WHERE id = ?;";
 
-    private final String FIND_BY_ID = "" +
+    private static final String FIND_BY_ID = "" +
             "SELECT " +
             "id, " +
             "full_name, " +
             "email, " +
             "phone, " +
             "address " +
+            "balance " +
             "FROM customers " +
             "WHERE id = ?;";
 
-    private final String UPDATE_CUSTOMER_SQL = "" +
+    private static final String UPDATE_CUSTOMER_SQL = "" +
             "UPDATE customers " +
             "SET " +
-            "name = ?, " +
+            "full_name = ?, " +
             "email= ?, " +
             "phone =? " +
             "WHERE id = ?;";
 
-    private final String ADD_CUSTOMER_SQL = "" +
-            "INSERT INTO customers(" +
-            "id, " +
-            "name, " +
-            "email, " +
-            "phone, " +
-            "address ) " +
-            "VALUES (?,?,?,?,?); ";
+    private static final String ADD_CUSTOMER_SQL = "INSERT INTO customers (full_name, email, phone, address) VALUES (?,?,?,?);";
+
 
 
     @Override
@@ -61,9 +56,7 @@ public class CustomerServicelmpl implements ICustomerService {
         try {
             Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CUSTOMER);
-
             ResultSet resultSet = preparedStatement.executeQuery();
-
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String full_name = resultSet.getString("full_name");
@@ -71,7 +64,7 @@ public class CustomerServicelmpl implements ICustomerService {
                 String phone = resultSet.getString("phone");
                 String address = resultSet.getString("address");
                 BigDecimal balance = resultSet.getBigDecimal("balance");
-                customers.add(new Customer(id, full_name, email, phone, balance, address));
+                customers.add(new Customer(id, full_name, email, phone, address, balance));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,8 +74,7 @@ public class CustomerServicelmpl implements ICustomerService {
 
     @Override
     public Customer findById(int id) {
-        Customer customer = new Customer();
-
+        Customer customer = null;
         try {
             Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID);
@@ -95,11 +87,8 @@ public class CustomerServicelmpl implements ICustomerService {
                 String email = resultSet.getString("email");
                 String phone = resultSet.getString("phone");
                 String address = resultSet.getString("address");
-                customer.setId(id);
-                customer.setName(full_name);
-                customer.setAddress(address);
-                customer.setEmail(email);
-                customer.setPhone(phone);
+                BigDecimal balace = resultSet.getBigDecimal("balance");
+                customer = new Customer(id, full_name, email, phone, address, balace);
             }
         } catch (SQLException exception) {
             exception.printStackTrace();
@@ -109,24 +98,19 @@ public class CustomerServicelmpl implements ICustomerService {
     }
 
     @Override
-    public int save(Customer customer) {
+    public void create(Customer customer) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(ADD_CUSTOMER_SQL, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement preparedStatement = connection.prepareStatement(ADD_CUSTOMER_SQL)
         ) {
-            preparedStatement.setInt(1, customer.getId());
-            preparedStatement.setString(2, customer.getName());
-            preparedStatement.setString(3, customer.getEmail());
-            preparedStatement.setString(4, customer.getPhone());
-            preparedStatement.setString(5, customer.getAddress());
+            preparedStatement.setString(1, customer.getName());
+            preparedStatement.setString(2, customer.getEmail());
+            preparedStatement.setString(3, customer.getPhone());
+            preparedStatement.setString(4, customer.getAddress());
             preparedStatement.executeUpdate();
-            ResultSet rs = preparedStatement.getGeneratedKeys();
-            while (rs.next()) {
-                rs.getInt(1);
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1;
+
     }
 
     @Override

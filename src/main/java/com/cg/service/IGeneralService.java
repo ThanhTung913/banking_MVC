@@ -8,7 +8,7 @@ public interface IGeneralService<T> {
 
     T findById(int id);
 
-    int save(T t);
+    void create(T t);
 
     boolean update(int id) throws SQLException;
 
