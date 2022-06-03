@@ -1,8 +1,10 @@
 package com.cg.controller;
 
 import com.cg.model.Customer;
+import com.cg.service.DepositService;
 import com.cg.service.ICustomerService;
 import com.cg.service.CustomerServicelmpl;
+import com.cg.service.IDepositSerVice;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -115,9 +118,9 @@ public class CustomerServlet extends HttpServlet {
 
     private void showDepositForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
-        Customer customerExist = customerService.findById(id);
+        Customer customer = customerService.findById(id);
         RequestDispatcher dispatcher = req.getRequestDispatcher("/customer/deposit.jsp");
-        req.setAttribute("customerExist",customerExist);
+        req.setAttribute("customer",customer);
         dispatcher.forward(req, resp);
     }
 
@@ -156,13 +159,14 @@ public class CustomerServlet extends HttpServlet {
         }
 
         switch (action) {
-            case "create":
+            case "deposit":
                 doDeposit(req, resp);
                 break;
             case "findById":
                 findById(req, resp);
                 break;
-            case "createOrder":
+            case "createCustomer":
+
                 break;
             case "edit" :
                 editCustomer(req,resp);
@@ -209,48 +213,21 @@ public class CustomerServlet extends HttpServlet {
     }
 
     private void doDeposit(HttpServletRequest request, HttpServletResponse response) {
-        int id = Integer.parseInt(request.getParameter("id"));
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-        String address = request.getParameter("address");
-        String messErrorName = "";
-        String messErrorPrice = "";
-        if (name == null || name.equals("")) {
-            messErrorName = "Không được để trống trường này";
-        }
-        if (email == null || email.equals("")) {
-            messErrorPrice = "Trường này không dược bỏ trống";
-        }
 
-        if (!messErrorName.equals("") || !messErrorPrice.equals("")) {
-            request.setAttribute("id", id);
-            request.setAttribute("name", name);
-            request.setAttribute("email", email);
-            request.setAttribute("phone", phone);
-            request.setAttribute("address", address);
-            request.setAttribute("phone", messErrorName);
-            request.setAttribute("address", messErrorPrice);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("customer/createCustomer.jsp");
+    int id = Integer.parseInt(request.getParameter("id"));
+    Customer customer = customerService.findById(id);
+        BigDecimal transactionAmount = new BigDecimal(request.getParameter("transactionAmount"));
+        IDepositSerVice depositSerVice = new DepositService();
+        depositSerVice.create(id, transactionAmount);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("customer/deposit.jsp");
+        request.setAttribute("customerExist", customer);
+
             try {
                 dispatcher.forward(request, response);
             } catch (ServletException | IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            String newName = name;
-            Customer newCustomer = new Customer(id, name, email, phone,address);
-            showCreateForm(newCustomer);
-            String messSuccess = "Thêm khách hàng " + newName + " thành công!!!";
-            request.setAttribute("messSuccess", messSuccess);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("");
-            try {
-                dispatcher.forward(request, response);
-            } catch (ServletException | IOException e) {
-                e.printStackTrace();
-            }
-//            createItem(request, response);
-        }
+
     }
 
 

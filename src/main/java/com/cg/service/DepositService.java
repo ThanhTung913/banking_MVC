@@ -3,6 +3,7 @@ package com.cg.service;
 import com.cg.model.Customer;
 import com.cg.model.Deposit;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +14,7 @@ public class DepositService implements IDepositSerVice{
     private final String jdbcUserName = "root";
     private final String jdbcPassword = "Thanhtung913";
     private final String SQL_SELECT_CUSTOMER = "SELECT * FROM customers;";
-    private final String CREATE_DEPOSIT_SQL = "INSERT INTO deposits (totalPrice,timeOrder) values (?,?);";
+    private final String CREATE_DEPOSIT_SQL = "call banking_Database.SP_Deposit(?,?);";
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -61,14 +62,19 @@ public class DepositService implements IDepositSerVice{
 
 
     @Override
-    public int create(Deposit deposit) {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEPOSIT_SQL, Statement.RETURN_GENERATED_KEYS)
-        ) {
+    public boolean create(int id, BigDecimal amount) {
+        try {
+            Connection connection = getConnection();
+            CallableStatement callableStatement = connection.prepareCall(CREATE_DEPOSIT_SQL);
+            callableStatement.setInt(1,id);
+            callableStatement.setBigDecimal(2, amount);
+            callableStatement.execute();
+
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return -1;
+        return true;
 
     }
 }

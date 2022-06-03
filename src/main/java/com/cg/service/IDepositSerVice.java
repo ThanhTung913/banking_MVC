@@ -3,6 +3,7 @@ package com.cg.service;
 import com.cg.model.Customer;
 import com.cg.model.Deposit;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface IDepositSerVice {
@@ -11,7 +12,7 @@ public interface IDepositSerVice {
 
     Customer selectCustomer(int id);
 
-    int create(Deposit deposit);
+    boolean create(int id, BigDecimal amount);
 
 
 }

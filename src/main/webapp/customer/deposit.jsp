@@ -34,7 +34,7 @@
         <div class="form-group row">
           <label class="col-sm-12 col-form-label">Customer ID</label>
           <div class="col-sm-12">
-            <input type="text" class="form-control" readonly id="id" name="id" value="${customerExist.getId()}" />
+            <input type="text" class="form-control" readonly id="id" name="id" value="${customer.getId()}" />
           </div>
         </div>
       </div>
@@ -42,7 +42,7 @@
         <div class="form-group row">
           <label class="col-sm-12 col-form-label">Full Name</label>
           <div class="col-sm-12">
-            <input type="text" class="form-control" readonly id="fullName" name="fullName" value="${customerExist.getName()}" />
+            <input type="text" class="form-control" readonly id="fullName" name="fullName" value="${customer.getName()}" />
           </div>
         </div>
       </div>
@@ -50,7 +50,7 @@
         <div class="form-group row">
           <label class="col-sm-12 col-form-label">Current balance ($)</label>
           <div class="col-sm-12">
-            <input type="text" class="form-control num-space" readonly id="balance" name="balance" value="${customerExist.getName()}" />
+            <input type="text" class="form-control num-space" readonly id="balance" name="balance" value="${customer.getBalance()}" />
           </div>
         </div>
       </div>
