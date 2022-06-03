@@ -28,11 +28,11 @@
   </div>
   <form id="frmUpdateCustomer" method="post" action="/customers?action=edit">
     <fieldset class="row g-3">
-      <input type="hidden" value="${id}">
+      <input type="hidden" name="id" value="${id}">
       <!--                <input th:type="hidden" th:field="*{id}">-->
       <div class="col-md-6">
         <label class="form-label">Full name</label>
-        <input type="text" class="form-control" id="fullName" name="fullName" value="${nameCustomer}">
+        <input type="text" class="form-control" id="full_name" name="full_name" value="${nameCustomer}">
       </div>
       <div class="col-md-6">
         <label class="form-label">Email</label>

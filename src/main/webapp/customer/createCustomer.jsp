@@ -31,7 +31,7 @@
         <form method="post" action="http://localhost:8080/customers?action=create">
             <div class="row mt-3">
                 <div class="col-md-6 mb-3">
-                    <label for="fullName" class="form-label" name="full_name">Full Name</label>
+                    <label for="full_name" class="form-label" name="full_name">Full Name</label>
                     <input type="text" class="form-control" name="full_name" id ="full_name">
                 </div>
                 <div class="col-md-6 mb-3">

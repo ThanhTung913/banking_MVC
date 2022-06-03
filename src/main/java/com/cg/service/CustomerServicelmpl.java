@@ -29,14 +29,14 @@ public class CustomerServicelmpl implements ICustomerService {
 
     private static final String FIND_BY_ID = "" +
             "SELECT " +
-            "id, " +
-            "full_name, " +
-            "email, " +
-            "phone, " +
-            "address " +
-            "balance " +
-            "FROM customers " +
-            "WHERE id = ?;";
+            "c.id, " +
+            "c.full_name, " +
+            "c.email, " +
+            "c.phone, " +
+            "c.address, " +
+            "c.balance " +
+            "FROM customers c " +
+            "WHERE c.id = ?;";
 
     private static final String UPDATE_CUSTOMER_SQL = "" +
             "UPDATE customers " +

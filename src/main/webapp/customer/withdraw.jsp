@@ -40,7 +40,7 @@
         <div class="form-group row">
           <label class="col-sm-12 col-form-label">Full Name</label>
           <div class="col-sm-12">
-            <input type="text" class="form-control" readonly id="fullName" name="fullName" value="${customer.name}" />
+            <input type="text" class="form-control" readonly id="full_name" name="full_name" value="${customer.name}" />
           </div>
         </div>
       </div>

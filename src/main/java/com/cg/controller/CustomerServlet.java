@@ -128,7 +128,12 @@ public class CustomerServlet extends HttpServlet {
         int id = Integer.parseInt(req.getParameter("id"));
 
         Customer customer = customerService.findById(id);
-        req.setAttribute("customer", customer);
+        req.setAttribute("full_name",customer.getName());
+        req.setAttribute("email",customer.getEmail());
+        req.setAttribute("phone",customer.getPhone());
+        req.setAttribute("address",customer.getAddress());
+        req.setAttribute("id",customer.getId());
+//        req.setAttribute("customer", customer);
         System.out.println(customer.getName());
         RequestDispatcher dispatcher = req.getRequestDispatcher("/customer/edit.jsp");
         dispatcher.forward(req, resp);

@@ -31,7 +31,7 @@
             <input type="hidden" name="id" id="id" value="365">
             <div class="col-md-6">
                 <label class="form-label">Full name</label>
-                <input type="text" class="form-control" id="fullName" name="fullName" value="${customer.id}">
+                <input type="text" class="form-control" id="full_name" name="full_name" value="${customer.id}">
             </div>
             <div class="col-md-6">
                 <label class="form-label">Email</label>
