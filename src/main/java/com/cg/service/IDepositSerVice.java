@@ -1,4 +1,12 @@
 package com.cg.service;
 
-public class IDepositSerVice {
+import com.cg.model.Deposit;
+
+import java.util.List;
+
+public interface IDepositSerVice {
+
+    int createDeposit(Deposit deposit);
+
+
 }
